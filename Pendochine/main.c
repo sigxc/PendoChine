@@ -11,6 +11,7 @@ int main(int argc, char *argv[]) {
   machine.mem[3] = HALT;
 
   execute(&machine);
+  regs_dump(&machine);
   mem_dump(&machine);
 
   return 0;

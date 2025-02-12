@@ -15,13 +15,13 @@ void init(Machine *machine) {
 }
 
 void regs_dump(Machine *machine) {
-  printf("EAX: %08X EBX: %08X", machine->eax, machine->ebx);
-  printf("ECX: %08X EDX: %08X", machine->ecx, machine->edx);
-  printf("EIP: %08X FLAGS: %b", machine->eip, machine->flags);
+  printf("EAX: %08X EBX: %08X\n", machine->eax, machine->ebx);
+  printf("ECX: %08X EDX: %08X\n", machine->ecx, machine->edx);
+  printf("EIP: %08X FLAGS: %b\n", machine->eip, machine->flags);
 }
 
 void mem_dump(Machine *machine) {
-  FILE *fd = fopen("mem_dump.txt", "w");
+  FILE *fd = fopen("mem_dump.bin", "w");
   if (fd == NULL) {
     perror("fopen");
     return;
@@ -70,6 +70,7 @@ void execute(Machine *machine) {
 
     case ADD: {
       *regs_lookup[operand1] = *regs_lookup[operand1] + *regs_lookup[operand2];
+      machine->eip += 3;
       break;
     }
 
