@@ -82,21 +82,21 @@ void mem_dump() {
 
   FILE *fd = fopen("mem_dump.bin", "w");
   if (fd == NULL) {
-    printf("\r[ \x1b[1;31mERROR\x1b[0m ] Creating dump file\n");
-    perror("\r\x1b[90mfopen\x1b[0m\n");
+    printf("\r[ " ANSI_ERROR "ERROR" ANSI_RESET " ] Creating dump file\n");
+    perror("\r" ANSI_INFO "fopen" ANSI_RESET "\n");
     return;
   }
 
-  printf("\r[ \x1b[32mOK\x1b[0m ] Creating dump file\n");
+  printf("\r[ " ANSI_SUCCESS "OK" ANSI_RESET " ] Creating dump file\n");
   printf("[    ] Writing dump");
   fflush(stdout);
 
   if (fwrite(machine.mem, sizeof(uint32_t), MEM_SIZE, fd) == 0) {
-    printf("\r[ \x1b[1;31mERROR\x1b[0m ] Writing dump\n");
-    perror("\r\x1b[90mfwrite\x1b[0m\n");
+    printf("\r[ " ANSI_ERROR "ERROR" ANSI_RESET " ] Writing dump\n");
+    perror("\r" ANSI_INFO "fwrite" ANSI_RESET "\n");
   };
 
-  printf("\r[ \x1b[32mOK\x1b[0m ] Writing dump\n");
+  printf("\r[ " ANSI_SUCCESS "OK" ANSI_RESET " ] Writing dump\n");
 
   fclose(fd);
 }
@@ -117,7 +117,7 @@ void execute() {
   printf("Executing...\n");
   while (1) {
     if (machine.mem[machine.regs[PIP]] == HALT) {
-      printf("Reached HALT opcode. Stopping execution\n");
+      printf("Reached " ANSI_OPC "HALT" ANSI_RESET " opcode. Stopping execution\n");
       return;
     }
     funcs_lookup[opcode]();
