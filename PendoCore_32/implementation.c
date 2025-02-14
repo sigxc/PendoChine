@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 void init(MACHINE *machine, REGISTERS *regs) {
-  regs->eax = 0;
+  regs->pip = 0;
   regs->ebx = 0;
   regs->ecx = 0;
   regs->edx = 0;
@@ -16,7 +16,7 @@ void init(MACHINE *machine, REGISTERS *regs) {
 }
 
 void dump_regs(REGISTERS *regs) {
-  printf("EAX: %u\n", regs->eax);
+  printf("pip: %u\n", regs->pip);
   printf("EBX: %u\n", regs->ebx);
   printf("ECX: %u\n", regs->ecx);
   printf("EDX: %u\n", regs->edx);
@@ -37,8 +37,8 @@ void dump_mem(MACHINE *machine) {
 
 uint32_t get_register_value(REGISTERS *regs, uint8_t reg_index) {
   switch (reg_index) {
-  case EAX:
-    return regs->eax;
+  case pip:
+    return regs->pip;
   case EBX:
     return regs->ebx;
   case ECX:
@@ -53,8 +53,8 @@ uint32_t get_register_value(REGISTERS *regs, uint8_t reg_index) {
 
 void set_register_value(REGISTERS *regs, uint8_t reg_index, uint32_t value) {
   switch (reg_index) {
-  case EAX:
-    regs->eax = value;
+  case pip:
+    regs->pip = value;
     break;
   case EBX:
     regs->ebx = value;

@@ -4,26 +4,25 @@
 #include <stdint.h>
 
 #define MEM_SIZE 65536
-#define NUM_REGISTERS 4
+#define NUM_REGS 6
 
 typedef struct {
-} Registers;
-
-typedef struct {
-  uint8_t  mem[MEM_SIZE];
-  uint32_t eip;
-  uint32_t eax;
-  uint32_t ebx;
-  uint32_t ecx;
-  uint32_t edx;
+  uint32_t mem[MEM_SIZE];
+  uint32_t regs[NUM_REGS];
   uint32_t flags : 8;
 } Machine;
+
+extern Machine machine; // Needed to avoid multiple declarations
 
 #define BIT(x) (1 << x)
 #define SET_FLAG(flags, flag) (flags |= flag)
 #define RESET_FLAG(flags, flag) (flags &= ~flag)
 #define SWITCH_FLAG(flags, flag) (flags ^= flag)
 #define CHECK_FLAG(flags, flag) (flags & flag)
+
+#define opcode machine.mem[machine.regs[PIP]]
+#define first_operand machine.mem[machine.regs[PIP] + 1]
+#define second_operand machine.mem[machine.regs[PIP] + 2]
 
 #define ZERO_FLAG BIT(0)
 #define SIGN_FLAG BIT(1)
@@ -34,48 +33,69 @@ typedef struct {
 #define BIGGER_FLAG BIT(6)
 #define LESSER_FLAG BIT(7)
 
-typedef enum {
-  NOP,
-  LOAD,
-  LOADMEM,
-  STORE,
-  STOREMEM,
-  ADD,
-  SUB,
-  MUL,
-  DIV,
-  POW,
-  SQRT,
-  JMP,
-  JZ,
-  JNZ,
-  JS,
-  JNS,
-  JC,
-  JNC,
-  JO,
-  JNO,
-  JP,
-  JNP,
-  INC,
-  DEC,
-  CALL,
-  CLZ,
-  CLC,
-  CLS,
-  CLO,
-  CLP,
-  CLE,
-  CLB,
-  CLL,
+// clang-format off
+
+// LOAD загружает значение в регистр
+// LOADMEM загружает значение из памяти в регистр
+// STORE загружает значение из регистра в память
+// MOVMEM перемещает значение в памяти
+enum {
+  NOP, LOAD, LOADMEM, STORE, MOV,
+  MOVMEM, ADD, SUB, MUL, DIV,
+  POW, CMP, JMP, JZ, JNZ,
+  JS, JNS, JC, JNC, JO,
+  JNO, JP, JNP, INC, DEC,
+  CALL, CLZ, CLC, CLS, CLO,
+  CLP, CLE, CLB, CLL,
   HALT = 0xFF,
-} Opcodes;
+};
 
-typedef enum { EAX, EBX, ECX, EDX } Register;
+enum {
+  PIP, PDV,
+  PAX, PBX,
+  PCX, PDX,
+};
+// clang-format on
 
-void init(Machine *machine);
-void regs_dump(Machine *machine);
-void mem_dump(Machine *machine);
-void execute(Machine *machine);
+void init(void);
+void regs_dump(void);
+void mem_dump(void);
+void execute(void);
 
+void nop(void);
+void load(void);
+void loadmem(void);
+void store(void);
+void mov(void);
+void movmem(void);
+void add(void);
+/*
+void sub(void);
+void mul(void);
+void divide(void);
+void power(void);
+void cmp(void);
+void jmp(void);
+void jz(void);
+void jnz(void);
+void js(void);
+void jns(void);
+void jc(void);
+void jnc(void);
+void jo(void);
+void jno(void);
+void jp(void);
+void jnp(void);
+void inc(void);
+void dec(void);
+void call(void);
+void clz(void);
+void clc(void);
+void cls(void);
+void clo(void);
+void clp(void);
+void cle(void);
+void clb(void);
+void cll(void);
+*/
 #endif

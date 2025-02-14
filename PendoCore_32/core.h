@@ -12,7 +12,7 @@ typedef struct {
 // Так как регистры 32-х битные то наименование будет соответствующее
 
 typedef struct {
-  uint32_t eax;
+  uint32_t pip;
   uint32_t ebx;
   uint32_t ecx;
   uint32_t edx;
@@ -22,7 +22,7 @@ typedef struct {
 } REGISTERS;
 
 enum {
-  EAX = 0x00,
+  pip = 0x00,
   EBX = 0x01,
   ECX = 0x02,
   EDX = 0x03,
