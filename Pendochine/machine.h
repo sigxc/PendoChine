@@ -24,6 +24,14 @@ extern Machine machine; // Needed to avoid multiple declarations
 #define first_operand machine.mem[machine.regs[PIP] + 1]
 #define second_operand machine.mem[machine.regs[PIP] + 2]
 
+#define ANSI_RESET "\x1b[0m"
+#define ANSI_ERROR "\x1b[1;31m"
+#define ANSI_SUCCESS "\x1b[1;32m"
+#define ANSI_NUM "\x1b[33m"
+#define ANSI_OPC "\x1b[34m"
+#define ANSI_REG "\x1b[35m"
+#define ANSI_INFO "\x1b[90m"
+
 #define ZERO_FLAG BIT(0)
 #define SIGN_FLAG BIT(1)
 #define CARRY_FLAG BIT(2)
