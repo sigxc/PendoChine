@@ -11,7 +11,7 @@ void init(Machine *machine) {
   machine->ecx = 0;
   machine->edx = 0;
   machine->flags = 0;
-  memset(machine->mem, '\0', mem_SIZE);
+  memset(machine->mem, '\0', MEM_SIZE);
 }
 
 void regs_dump(Machine *machine) {
@@ -26,7 +26,7 @@ void mem_dump(Machine *machine) {
     perror("fopen");
     return;
   }
-  fwrite(machine->mem, sizeof(unsigned char), mem_SIZE, fd);
+  fwrite(machine->mem, sizeof(unsigned char), MEM_SIZE, fd);
   fclose(fd);
 }
 
