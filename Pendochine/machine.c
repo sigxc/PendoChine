@@ -4,115 +4,123 @@
 #include <stdlib.h>
 #include <string.h>
 
-void init(Machine *machine) {
-  machine->eip = 0;
-  machine->eax = 0;
-  machine->ebx = 0;
-  machine->ecx = 0;
-  machine->edx = 0;
-  machine->flags = 0;
-  memset(machine->mem, '\0', MEM_SIZE);
+void regs_dump() {
+  printf("PAX: %08X PBX: %08X\n", machine.regs[PAX], machine.regs[PBX]);
+  printf("PCX: %08X PDX: %08X\n", machine.regs[PCX], machine.regs[PDX]);
+  printf("PIP: %08X PDV: %08X\n", machine.regs[PIP], machine.regs[PDV]);
+  printf("FLAGS: %b\n", machine.flags);
 }
 
-void regs_dump(Machine *machine) {
-  printf("EAX: %08X EBX: %08X\n", machine->eax, machine->ebx);
-  printf("ECX: %08X EDX: %08X\n", machine->ecx, machine->edx);
-  printf("EIP: %08X FLAGS: %b\n", machine->eip, machine->flags);
+#ifndef VERBOSE
+void init() {
+  for (int i = 0; i < NUM_REGS; i++) {
+    machine.regs[i] = 0;
+  }
+  machine.flags = 0;
+  memset(machine.mem, '\0', MEM_SIZE * sizeof(uint32_t));
 }
 
-void mem_dump(Machine *machine) {
+void mem_dump() {
   FILE *fd = fopen("mem_dump.bin", "w");
+
   if (fd == NULL) {
     perror("fopen");
     return;
   }
-  fwrite(machine->mem, sizeof(unsigned char), MEM_SIZE, fd);
+
+  if (fwrite(machine.mem, sizeof(uint32_t), MEM_SIZE, fd) == 0) {
+    perror("fwrite");
+  }
+
   fclose(fd);
 }
 
-// Здесь ОЧЕНЬ МНОГО плейсхолдеров
-void execute(Machine *machine) {
+void execute() {
+
   // clang-format off
-  uint32_t *regs_lookup[] = {
-    [EAX] = &machine->eax,
-    [EBX] = &machine->ebx,
-    [ECX] = &machine->ecx,
-    [EDX] = &machine->edx};
+  void (*funcs_lookup[])() = {
+    nop, load, loadmem, store, mov,
+    movmem, add, /*sub, mul, divide,
+    power, cmp, jmp, jz, jnz,
+    js, jns, jc, jnc, jo,
+    jno, jp, jnp, inc, dec,
+    call, clz, clc, cls, clo,
+    clp, cle, clb, cll*/
+  };
   // clang-format on
 
   while (1) {
-    uint8_t opcode = machine->mem[machine->eip];
-    uint8_t operand1 = machine->mem[machine->eip + 1];
-    uint8_t operand2 = machine->mem[machine->eip + 2];
-
-    switch (opcode) {
-
-    case NOP: {
-      machine->eip++;
-      break;
-    }
-
-    case LOAD: {
-      break;
-    }
-
-    case LOADMEM: {
-      break;
-    }
-
-    case STORE: {
-      break;
-    }
-
-    case STOREMEM: {
-      break;
-    }
-
-    case ADD: {
-      *regs_lookup[operand1] = *regs_lookup[operand1] + *regs_lookup[operand2];
-      machine->eip += 3;
-      break;
-    }
-
-    case SUB: {
-      break;
-    }
-
-    case MUL: {
-      break;
-    }
-
-    case DIV: {
-      break;
-    }
-
-    case POW: {
-      break;
-    }
-
-    case SQRT: {
-      break;
-    }
-
-    case JMP: {
-      machine->eip = operand1;
-      break;
-    }
-
-    case JZ: {
-      break;
-    }
-    case JNZ: {
-      break;
-    }
-
-    case HALT: {
-      return;
-    };
-
-    default:
-      printf("Unknown opcode: %02X\n", opcode);
+    if (machine.mem[machine.regs[PIP]] == HALT) {
       return;
     }
+
+    funcs_lookup[opcode]();
   }
 }
+#endif
+
+#ifdef VERBOSE
+void init() {
+
+  printf("Initializing machine...\n");
+  printf("\tZeroing general purpose registers\n");
+
+  for (int i = 0; i < NUM_REGS; i++) {
+    machine.regs[i] = 0;
+  }
+
+  printf("\tZeroing flags\n");
+  machine.flags = 0;
+
+  printf("\tZeroing machine memory\n");
+  memset(machine.mem, '\0', MEM_SIZE * sizeof(uint32_t));
+}
+
+void mem_dump() {
+  printf("[    ] Creating dump file");
+  fflush(stdout);
+
+  FILE *fd = fopen("mem_dump.bin", "w");
+  if (fd == NULL) {
+    printf("\r[ \x1b[1;31mERROR\x1b[0m ] Creating dump file\n");
+    perror("\r\x1b[90mfopen\x1b[0m\n");
+    return;
+  }
+
+  printf("\r[ \x1b[32mOK\x1b[0m ] Creating dump file\n");
+  printf("[    ] Writing dump");
+  fflush(stdout);
+
+  if (fwrite(machine.mem, sizeof(uint32_t), MEM_SIZE, fd) == 0) {
+    printf("\r[ \x1b[1;31mERROR\x1b[0m ] Writing dump\n");
+    perror("\r\x1b[90mfwrite\x1b[0m\n");
+  };
+
+  printf("\r[ \x1b[32mOK\x1b[0m ] Writing dump\n");
+
+  fclose(fd);
+}
+
+void execute() {
+
+  // clang-format off
+  void (*funcs_lookup[])() = {
+    nop, load, loadmem, store, mov,
+    movmem, add, /*sub, mul, divide,
+    power, cmp, jmp, jz, jnz,
+    js, jns, jc, jnc, jo,
+    jno, jp, jnp, inc, dec,
+    call, clz, clc, cls, clo,
+    clp, cle, clb, cll*/
+  };
+  // clang-format on
+  printf("Executing...\n");
+  while (1) {
+    if (machine.mem[machine.regs[PIP]] == HALT) {
+      printf("Reached HALT opcode. Stopping execution\n");
+      return;
+    }
+    funcs_lookup[opcode]();
+  }
+}
+#endif
