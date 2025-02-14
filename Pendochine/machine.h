@@ -3,14 +3,14 @@
 
 #include <stdint.h>
 
-#define mem_SIZE 65536
+#define MEM_SIZE 65536
 #define NUM_REGISTERS 4
 
 typedef struct {
 } Registers;
 
 typedef struct {
-  uint8_t  mem[mem_SIZE];
+  uint8_t  mem[MEM_SIZE];
   uint32_t eip;
   uint32_t eax;
   uint32_t ebx;
