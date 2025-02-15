@@ -1,6 +1,6 @@
 CC = clang
 BIN = machine
-FLAGS = -O3 -march=native -mtune=native -flto -fvectorize -fslp-vectorize
+FLAGS = -O3 -march=native -mtune=native
 
 all:
 	$(CC) $(FLAGS) main.c machine.c opcodes.c -o $(BIN)
