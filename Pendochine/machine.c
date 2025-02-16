@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void regs_dump() {
+void regs_dump(void) {
   printf("PAX: %08X PBX: %08X\n", machine.regs[PAX],
          machine.regs[PBX]);
   printf("PCX: %08X PDX: %08X\n", machine.regs[PCX],
@@ -14,17 +14,24 @@ void regs_dump() {
   printf("FLAGS: %b\n", machine.flags);
 }
 
+void print_vga(void) {
+  for (int i = 0; i < 25; i++) {
+    printf("%.80s\n", &machine.mem[80 * i]);
+  }
+  printf("\x1b[25A\r");
+}
+
 #ifndef VERBOSE
-void init() {
+void init(void) {
   for (int i = 1; i < NUM_REGS; i++) {
     machine.regs[i] = 0;
   }
   machine.regs[PIP] = VGA_BUFFER_SIZE + 1;
   machine.flags = 0;
-  memset(machine.mem, '\0', MEM_SIZE * sizeof(uint32_t));
+  memset(machine.mem, '\0', MEM_SIZE * sizeof(uint8_t));
 }
 
-void mem_dump() {
+void mem_dump(void) {
   FILE *fd = fopen("mem_dump.bin", "w");
 
   if (fd == NULL) {
@@ -32,17 +39,17 @@ void mem_dump() {
     return;
   }
 
-  if (fwrite(machine.mem, sizeof(uint32_t), MEM_SIZE, fd) == 0) {
+  if (fwrite(machine.mem, sizeof(uint8_t), MEM_SIZE, fd) == 0) {
     perror("fwrite");
   }
 
   fclose(fd);
 }
 
-void execute() {
+void execute(void) {
 
   // clang-format off
-  void (*funcs_lookup[])() = {
+  void (*opcodes_lookup[])() = {
     nop, load, loadmem, store, mov,
     movmem, add, sub, mul, divide,
     power, /*cmp, jmp, jz, jnz,
@@ -55,16 +62,17 @@ void execute() {
 
   while (1) {
     if (machine.mem[machine.regs[PIP]] == HALT) {
+      printf("\x1b[80C\r\n");
       return;
     }
 
-    funcs_lookup[opcode]();
+    opcodes_lookup[opcode]();
   }
 }
 #endif
 
 #ifdef VERBOSE
-void init() {
+void init(void) {
 
   printf("Initializing machine...\n");
   printf("\tZeroing general purpose registers\n");
@@ -73,17 +81,17 @@ void init() {
     machine.regs[i] = 0;
   }
 
-  printf("Setting PIP at the beginning of the code section\n");
+  printf("\tSetting PIP at the beginning of the code section\n");
   machine.regs[PIP] = VGA_BUFFER_SIZE + 1;
 
   printf("\tZeroing flags\n");
   machine.flags = 0;
 
   printf("\tZeroing machine memory\n");
-  memset(machine.mem, '\0', MEM_SIZE * sizeof(uint32_t));
+  memset(machine.mem, '\0', MEM_SIZE * sizeof(uint8_t));
 }
 
-void mem_dump() {
+void mem_dump(void) {
   printf("[    ] Creating dump file");
   fflush(stdout);
 
@@ -100,7 +108,7 @@ void mem_dump() {
   printf("[    ] Writing dump");
   fflush(stdout);
 
-  if (fwrite(machine.mem, sizeof(uint32_t), MEM_SIZE, fd) == 0) {
+  if (fwrite(machine.mem, sizeof(uint8_t), MEM_SIZE, fd) == 0) {
     printf("\r[ " ANSI_ERROR "ERROR" ANSI_RESET
            " ] Writing dump\n");
     perror("\r" ANSI_INFO "fwrite" ANSI_RESET "\n");
@@ -112,7 +120,7 @@ void mem_dump() {
   fclose(fd);
 }
 
-void execute() {
+void execute(void) {
 
   // clang-format off
   void (*opcodes_lookup[])() = {
@@ -128,6 +136,7 @@ void execute() {
   printf("Executing...\n");
   while (1) {
     if (machine.mem[machine.regs[PIP]] == HALT) {
+      printf("\x1b[80C\x1b[25B\n");
       printf("Reached " ANSI_OPC "HALT" ANSI_RESET
              " opcode. Stopping execution\n");
       return;

@@ -19,4 +19,4 @@ clean:
 	rm mem_dump.hex
 	rm $(BIN)_debug
 	rm $(BIN)_verbose
-	rm mem_dump.txt
+	rm mem_dump.bin
