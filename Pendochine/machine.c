@@ -5,17 +5,21 @@
 #include <string.h>
 
 void regs_dump() {
-  printf("PAX: %08X PBX: %08X\n", machine.regs[PAX], machine.regs[PBX]);
-  printf("PCX: %08X PDX: %08X\n", machine.regs[PCX], machine.regs[PDX]);
-  printf("PIP: %08X PDV: %08X\n", machine.regs[PIP], machine.regs[PDV]);
+  printf("PAX: %08X PBX: %08X\n", machine.regs[PAX],
+         machine.regs[PBX]);
+  printf("PCX: %08X PDX: %08X\n", machine.regs[PCX],
+         machine.regs[PDX]);
+  printf("PIP: %08X PDV: %08X\n", machine.regs[PIP],
+         machine.regs[PDV]);
   printf("FLAGS: %b\n", machine.flags);
 }
 
 #ifndef VERBOSE
 void init() {
-  for (int i = 0; i < NUM_REGS; i++) {
+  for (int i = 1; i < NUM_REGS; i++) {
     machine.regs[i] = 0;
   }
+  machine.regs[PIP] = VGA_BUFFER_SIZE + 1;
   machine.flags = 0;
   memset(machine.mem, '\0', MEM_SIZE * sizeof(uint32_t));
 }
@@ -65,9 +69,12 @@ void init() {
   printf("Initializing machine...\n");
   printf("\tZeroing general purpose registers\n");
 
-  for (int i = 0; i < NUM_REGS; i++) {
+  for (int i = 1; i < NUM_REGS; i++) {
     machine.regs[i] = 0;
   }
+
+  printf("Setting PIP at the beginning of the code section\n");
+  machine.regs[PIP] = VGA_BUFFER_SIZE + 1;
 
   printf("\tZeroing flags\n");
   machine.flags = 0;
@@ -82,21 +89,25 @@ void mem_dump() {
 
   FILE *fd = fopen("mem_dump.bin", "w");
   if (fd == NULL) {
-    printf("\r[ " ANSI_ERROR "ERROR" ANSI_RESET " ] Creating dump file\n");
+    printf("\r[ " ANSI_ERROR "ERROR" ANSI_RESET
+           " ] Creating dump file\n");
     perror("\r" ANSI_INFO "fopen" ANSI_RESET "\n");
     return;
   }
 
-  printf("\r[ " ANSI_SUCCESS "OK" ANSI_RESET " ] Creating dump file\n");
+  printf("\r[ " ANSI_SUCCESS "OK" ANSI_RESET
+         " ] Creating dump file\n");
   printf("[    ] Writing dump");
   fflush(stdout);
 
   if (fwrite(machine.mem, sizeof(uint32_t), MEM_SIZE, fd) == 0) {
-    printf("\r[ " ANSI_ERROR "ERROR" ANSI_RESET " ] Writing dump\n");
+    printf("\r[ " ANSI_ERROR "ERROR" ANSI_RESET
+           " ] Writing dump\n");
     perror("\r" ANSI_INFO "fwrite" ANSI_RESET "\n");
   };
 
-  printf("\r[ " ANSI_SUCCESS "OK" ANSI_RESET " ] Writing dump\n");
+  printf("\r[ " ANSI_SUCCESS "OK" ANSI_RESET
+         " ] Writing dump\n");
 
   fclose(fd);
 }
@@ -104,7 +115,7 @@ void mem_dump() {
 void execute() {
 
   // clang-format off
-  void (*funcs_lookup[])() = {
+  void (*opcodes_lookup[])() = {
     nop, load, loadmem, store, mov,
     movmem, add, sub, mul, divide,
     power, /*cmp, jmp, jz, jnz,
@@ -121,7 +132,7 @@ void execute() {
              " opcode. Stopping execution\n");
       return;
     }
-    funcs_lookup[opcode]();
+    opcodes_lookup[opcode]();
   }
 }
 #endif
