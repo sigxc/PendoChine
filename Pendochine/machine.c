@@ -40,12 +40,12 @@ void execute() {
   // clang-format off
   void (*funcs_lookup[])() = {
     nop, load, loadmem, store, mov,
-    movmem, add, /*sub, mul, divide,
-    power, cmp, jmp, jz, jnz,
-    js, jns, jc, jnc, jo,
-    jno, jp, jnp, inc, dec,
-    call, clz, clc, cls, clo,
-    clp, cle, clb, cll*/
+    movmem, add, sub, mul, divide,
+    power, /*cmp, jmp, jz, jnz,
+    js, jns, jo, jno, jp,
+    jnp, inc, dec, call, clz,
+    clc, cls, clo, clp, cle,
+    clb, cll*/
   };
   // clang-format on
 
@@ -106,18 +106,19 @@ void execute() {
   // clang-format off
   void (*funcs_lookup[])() = {
     nop, load, loadmem, store, mov,
-    movmem, add, /*sub, mul, divide,
-    power, cmp, jmp, jz, jnz,
-    js, jns, jc, jnc, jo,
-    jno, jp, jnp, inc, dec,
-    call, clz, clc, cls, clo,
-    clp, cle, clb, cll*/
+    movmem, add, sub, mul, divide,
+    power, /*cmp, jmp, jz, jnz,
+    js, jns, jo, jno, jp,
+    jnp, inc, dec, call, clz,
+    clc, cls, clo, clp, cle,
+    clb, cll*/
   };
   // clang-format on
   printf("Executing...\n");
   while (1) {
     if (machine.mem[machine.regs[PIP]] == HALT) {
-      printf("Reached " ANSI_OPC "HALT" ANSI_RESET " opcode. Stopping execution\n");
+      printf("Reached " ANSI_OPC "HALT" ANSI_RESET
+             " opcode. Stopping execution\n");
       return;
     }
     funcs_lookup[opcode]();
