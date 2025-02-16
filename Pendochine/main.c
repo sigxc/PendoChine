@@ -1,9 +1,22 @@
 #include "machine.h"
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 Machine machine; // Needed to avoid multiple declarations
 
 int main(int argc, char *argv[]) {
   init();
+  char arr[] = "Hello, World!";
+  memcpy(machine.mem, arr, 13);
+  print_vga();
+  sleep(1);
+  memset(machine.mem, 'a', VGA_BUFFER_SIZE);
+  print_vga();
+  sleep(1);
+  memset(machine.mem, 'b', VGA_BUFFER_SIZE);
+  print_vga();
+  printf("\x1b[24B");
   machine.regs[PAX] = 2;
   mem(0) = STORE;
   mem(1) = PAX;

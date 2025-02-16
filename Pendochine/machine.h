@@ -1,19 +1,19 @@
 // clang-format off
 #ifndef MACHINE_H
 #define MACHINE_H
-#define VERBOSE
+
 #include <stdint.h>
 
 #define MEM_SIZE 65536
 #define NUM_REGS 6
 
 typedef struct {
-  uint32_t mem[MEM_SIZE];
+  uint8_t mem[MEM_SIZE];
   uint32_t regs[NUM_REGS];
   uint32_t flags : 6;
 } Machine;
 
-#define VGA_BUFFER_SIZE (80 * 25 * sizeof(uint32_t))
+#define VGA_BUFFER_SIZE (80 * 25 * sizeof(uint8_t))
 
 // Needed to avoid multiple declarations
 extern Machine machine;
@@ -115,6 +115,8 @@ void clp(void);
 void cle(void);
 void clb(void);
 void cll(void);
+
+void print_vga(void);
 
 #endif
 // clang-format on
