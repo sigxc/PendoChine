@@ -1,8 +1,8 @@
 #include "machine.h"
-#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #ifdef VERBOSE
-#include <stdio.h>
 
 // clang-format off
 char *regs_name_lookup[] = {
@@ -69,6 +69,12 @@ void store(void) {
 
   machine.mem[second_operand] = machine.regs[first_operand];
   machine.regs[PIP] += 3;
+
+  /*
+    if (machine.mem[second_operand] <= VGA_BUFFER_SIZE) {
+      print_vga();
+    }
+  */
   return;
 }
 
@@ -98,6 +104,11 @@ void movmem(void) {
 
   machine.mem[second_operand] = machine.mem[first_operand];
   machine.regs[PIP] += 3;
+  /*
+  if (machine.mem[second_operand] <= VGA_BUFFER_SIZE) {
+      print_vga();
+    }
+  */
   return;
 }
 
@@ -140,7 +151,21 @@ void sub(void) {
          regs_name_lookup[second_operand]);
 #endif
 
-  machine.regs[first_operand] -= machine.regs[second_operand];
+  uint32_t result;
+
+  SET_ARBITRARY_BIT(machine.flags,
+                    __builtin_sub_overflow(
+                        machine.regs[first_operand],
+                        machine.regs[second_operand], &result),
+                    OVERFLOW_FLAG_POS);
+
+  SET_ARBITRARY_BIT(machine.flags, result == 0, ZERO_FLAG_POS);
+  SET_ARBITRARY_BIT(machine.flags, result < 0, SIGN_FLAG_POS);
+  SET_ARBITRARY_BIT(machine.flags, result % 2 == 0,
+                    PARITY_FLAG_POS);
+
+  machine.regs[first_operand] = result;
+
   machine.regs[PIP] += 3;
   return;
 }
@@ -155,7 +180,21 @@ void mul(void) {
          regs_name_lookup[second_operand]);
 #endif
 
-  machine.regs[first_operand] *= machine.regs[second_operand];
+  uint32_t result;
+
+  SET_ARBITRARY_BIT(machine.flags,
+                    __builtin_mul_overflow(
+                        machine.regs[first_operand],
+                        machine.regs[second_operand], &result),
+                    OVERFLOW_FLAG_POS);
+
+  SET_ARBITRARY_BIT(machine.flags, result == 0, ZERO_FLAG_POS);
+  SET_ARBITRARY_BIT(machine.flags, result < 0, SIGN_FLAG_POS);
+  SET_ARBITRARY_BIT(machine.flags, result % 2 == 0,
+                    PARITY_FLAG_POS);
+
+  machine.regs[first_operand] = result;
+
   machine.regs[PIP] += 3;
   return;
 }
@@ -169,9 +208,23 @@ void divide(void) {
          second_operand, regs_name_lookup[first_operand],
          regs_name_lookup[second_operand]);
 #endif
+
+  if (machine.regs[second_operand] == 0) {
+    printf(ANSI_ERROR "You can't divide by zero!" ANSI_RESET);
+    machine.regs[PIP]++;
+    machine.mem[machine.regs[PIP]] = HALT;
+    return;
+  }
   uint32_t temp = machine.regs[first_operand];
   machine.regs[first_operand] /= machine.regs[second_operand];
   machine.regs[PDV] = temp % machine.regs[second_operand];
+
+  SET_ARBITRARY_BIT(machine.flags,
+                    machine.regs[first_operand] < 0,
+                    SIGN_FLAG_POS);
+
+  SET_ARBITRARY_BIT(machine.flags, machine.regs[PDV] != 0,
+                    REMAINDER_FLAG_POS);
   machine.regs[PIP] += 3;
   return;
 }

@@ -54,15 +54,17 @@ void execute(void) {
     movmem, add, sub, mul, divide,
     power, /*cmp, jmp, jz, jnz,
     js, jns, jo, jno, jp,
-    jnp, inc, dec, call, clz,
-    clc, cls, clo, clp, cle,
+    jnp, inc, dec, call, setz,
+    setc, sets, seto,
+    setp, sete, setb, setl,
+    clz, clc, cls, clo, clp, cle,
     clb, cll*/
   };
   // clang-format on
 
   while (1) {
     if (machine.mem[machine.regs[PIP]] == HALT) {
-      printf("\x1b[80C\r\n");
+      printf("\x1b[80C\x1b[25B\n");
       return;
     }
 
@@ -128,8 +130,10 @@ void execute(void) {
     movmem, add, sub, mul, divide,
     power, /*cmp, jmp, jz, jnz,
     js, jns, jo, jno, jp,
-    jnp, inc, dec, call, clz,
-    clc, cls, clo, clp, cle,
+    jnp, inc, dec, call, setz,
+    setc, sets, seto,
+    setp, sete, setb, setl,
+    clz, clc, cls, clo, clp, cle,
     clb, cll*/
   };
   // clang-format on
