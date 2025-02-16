@@ -23,6 +23,7 @@ extern Machine machine; // Needed to avoid multiple declarations
 #define opcode machine.mem[machine.regs[PIP]]
 #define first_operand machine.mem[machine.regs[PIP] + 1]
 #define second_operand machine.mem[machine.regs[PIP] + 2]
+#define mem(i) machine.mem[i]
 
 #define ANSI_RESET "\x1b[0m"
 #define ANSI_ERROR "\x1b[1;31m"
@@ -34,12 +35,11 @@ extern Machine machine; // Needed to avoid multiple declarations
 
 #define ZERO_FLAG BIT(0)
 #define SIGN_FLAG BIT(1)
-#define CARRY_FLAG BIT(2)
-#define OVERFLOW_FLAG BIT(3)
-#define PARITY_FLAG BIT(4)
-#define EQUAL_FLAG BIT(5)
-#define BIGGER_FLAG BIT(6)
-#define LESSER_FLAG BIT(7)
+#define OVERFLOW_FLAG BIT(2)
+#define PARITY_FLAG BIT(3)
+#define EQUAL_FLAG BIT(4)
+#define BIGGER_FLAG BIT(5)
+#define LESSER_FLAG BIT(6)
 
 // clang-format off
 
@@ -51,10 +51,11 @@ enum {
   NOP, LOAD, LOADMEM, STORE, MOV,
   MOVMEM, ADD, SUB, MUL, DIV,
   POW, CMP, JMP, JZ, JNZ,
-  JS, JNS, JC, JNC, JO,
-  JNO, JP, JNP, INC, DEC,
-  CALL, CLZ, CLC, CLS, CLO,
-  CLP, CLE, CLB, CLL,
+  JS, JNS, JO, JNO,
+  JP, JNP, JE, JNE,
+  JB, JNB, JL, JNL, INC,
+  DEC, CALL, CLZ, CLC, CLS,
+  CLO, CLP, CLE, CLB, CLL,
   HALT = 0xFF,
 };
 
@@ -77,7 +78,6 @@ void store(void);
 void mov(void);
 void movmem(void);
 void add(void);
-/*
 void sub(void);
 void mul(void);
 void divide(void);
@@ -105,5 +105,5 @@ void clp(void);
 void cle(void);
 void clb(void);
 void cll(void);
-*/
+
 #endif
