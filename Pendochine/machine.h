@@ -8,9 +8,9 @@
 #define NUM_REGS 6
 
 typedef struct {
-  uint8_t mem[MEM_SIZE];
-  uint32_t regs[NUM_REGS];
-  uint32_t flags : 6;
+  int8_t mem[MEM_SIZE];
+  int32_t regs[NUM_REGS];
+  uint32_t flags : 8;
 } Machine;
 
 #define VGA_BUFFER_SIZE (80 * 25 * sizeof(uint8_t))
@@ -19,27 +19,29 @@ typedef struct {
 extern Machine machine;
 
 #define BIT(x) (1 << x)
-#define SET_FLAG(flags, flag) (flags |= flag)
-#define RESET_FLAG(flags, flag) (flags &= ~flag)
-#define SWITCH_FLAG(flags, flag) (flags ^= flag)
-#define CHECK_FLAG(flags, flag) (flags & flag)
+#define SET_FLAG(bitfield, flag) (bitfield |= flag)
+#define RESET_FLAG(bitfield, flag) (bitfield &= ~flag)
+#define SWITCH_FLAG(bitfield, flag) (bitfield ^= flag)
+#define CHECK_FLAG(bitfield, flag) (bitfield & flag)
 #define SET_ARBITRARY_BIT(bitfield, expr, place) (bitfield |= ((expr) << place))
 
 #define ZERO_FLAG BIT(0)
 #define SIGN_FLAG BIT(1)
 #define OVERFLOW_FLAG BIT(2)
 #define PARITY_FLAG BIT(3)
-#define EQUAL_FLAG BIT(4)
-#define BIGGER_FLAG BIT(5)
-#define SMALLER_FLAG BIT(6)
+#define REMAINDER_FLAG BIT(4)
+#define EQUAL_FLAG BIT(5)
+#define BIGGER_FLAG BIT(6)
+#define SMALLER_FLAG BIT(7)
 
 #define ZERO_FLAG_POS 0
 #define SIGN_FLAG_POS 1
 #define OVERFLOW_FLAG_POS 2
 #define PARITY_FLAG_POS 3
-#define EQUAL_FLAG_POS 4
-#define BIGGER_FLAG_POS 5
-#define SMALLER_FLAG_POS 6
+#define REMAINDER_FLAG_POS 4
+#define EQUAL_FLAG_POS 5
+#define BIGGER_FLAG_POS 6
+#define SMALLER_FLAG_POS 7
 
 #define opcode machine.mem[machine.regs[PIP]]
 #define first_operand machine.mem[machine.regs[PIP] + 1]
@@ -65,9 +67,11 @@ enum {
   JS, JNS, JO, JNO,
   JP, JNP, JE, JNE,
   JB, JNB, JL, JNL, INC,
-  DEC, CALL, CLZ, CLC, CLS,
+  DEC, CALL, SETZ, SETC,
+  SETS, SETO, SETP, SETE,
+  SETB, SETL, CLZ, CLC, CLS,
   CLO, CLP, CLE, CLB, CLL,
-  HALT = 0xFF,
+  HALT = -1,
 };
 
 enum {
