@@ -230,10 +230,6 @@ int main(int argc, char *argv[]) {
   char line[MAX_LINE_LEN];
   uint32_t address = 0;
   while (fgets(line, MAX_LINE_LEN, fp)) process_line_pass1(line, &address);
-
-  if (!label_exists("start")) {
-    error_exit(ERROR ": Entry point does not exist\n");
-  }
   
   rewind(fp);
   address = 0;
