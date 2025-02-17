@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <ctype.h>
 #include <stdarg.h>
+#include <time.h>
 
 #define MAX_LABELS 1000
 #define MAX_CODE_SIZE 65536
@@ -219,6 +220,11 @@ void process_line_pass2(char *line, uint32_t *address) {
 }
 
 int main(int argc, char *argv[]) {
+  time_t rawtime;
+  struct tm *timeinfo;
+  time (&rawtime);
+  timeinfo = localtime (&rawtime);
+	
   if (argc != 3) {
     fprintf(stderr, "Usage: %s <input.asm> <output.pin>\n", argv[0]);
     return EXIT_FAILURE;
@@ -230,10 +236,6 @@ int main(int argc, char *argv[]) {
   char line[MAX_LINE_LEN];
   uint32_t address = 0;
   while (fgets(line, MAX_LINE_LEN, fp)) process_line_pass1(line, &address);
-
-  if (!label_exists("start")) {
-    error_exit(ERROR ": Entry point does not exist\n");
-  }
   
   rewind(fp);
   address = 0;
@@ -248,6 +250,6 @@ int main(int argc, char *argv[]) {
   fwrite(output, sizeof(uint32_t), output_pos, out);
   fclose(out);
 
-  printf("Compilation \x1b[32mfinished\x1b[0m: %d words\n", output_pos);
+  printf("Compilation \x1b[32mfinished\x1b[0m at %s", asctime(timeinfo));
   return 0;
 }
