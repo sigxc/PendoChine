@@ -1,4 +1,3 @@
-// clang-format off
 #ifndef MACHINE_H
 #define MACHINE_H
 
@@ -8,8 +7,8 @@
 #define NUM_REGS 6
 
 typedef struct {
-  int8_t mem[MEM_SIZE];
-  int32_t regs[NUM_REGS];
+  int8_t   mem[MEM_SIZE];
+  int32_t  regs[NUM_REGS];
   uint32_t flags : 8;
 } Machine;
 
@@ -123,4 +122,3 @@ void cll(void);
 void print_vga(void);
 
 #endif
-// clang-format on
