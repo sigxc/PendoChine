@@ -110,7 +110,7 @@ void mem_dump(void) {
     perror("\r" ANSI_INFO "fwrite" ANSI_RESET "\n");
   };
 
-  printf("\r[ " iANSI_SUCCESS "OK" ANSI_RESET " ] Writing dump\n");
+  printf("\r[ " ANSI_SUCCESS "OK" ANSI_RESET " ] Writing dump\n");
 
   fclose(fd);
 }
