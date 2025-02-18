@@ -110,7 +110,7 @@ void mem_dump(void) {
     perror("\r" ANSI_INFO "fwrite" ANSI_RESET "\n");
   };
 
-  printf("\r[ " ANSI_SUCCESS "OK" ANSI_RESET " ] Writing dump\n");
+  printf("\r[ " iANSI_SUCCESS "OK" ANSI_RESET " ] Writing dump\n");
 
   fclose(fd);
 }
@@ -134,8 +134,7 @@ void execute(void) {
   while (1) {
     if (machine.mem[machine.regs[PIP]] == HALT) {
       printf("\x1b[80C\x1b[25B\n");
-      printf("Reached " ANSI_OPC "HALT" ANSI_RESET
-             " opcode. Stopping execution\n");
+      printf("Reached " ANSI_OPC "HALT" ANSI_RESET " opcode. Stopping execution\n");
       return;
     }
     opcodes_lookup[opcode]();
