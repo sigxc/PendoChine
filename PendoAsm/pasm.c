@@ -69,10 +69,8 @@ uint32_t find_label(const char *name) {
   return 0;
 }
 
-int label_exists(const char *name) {      /* Это функция чисто, чтобы проверить на
-                                             точку входа */
-  for (int i = 0; i < label_count; i++) { /* Хотя кстати, в целом, может когда-то ещё на
-                                             какую-то свистоперделку проверю */
+int label_exists(const char *name) {      /* Это функция чисто, чтобы проверить на точку входа */
+  for (int i = 0; i < label_count; i++) { /* Хотя кстати, в целом, может когда-то ещё на какую-то свистоперделку проверю */
     if (strcasecmp(labels[i].name, name) == 0) return 1;
   }
   return 0;
