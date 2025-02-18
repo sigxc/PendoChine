@@ -11,3 +11,10 @@ PRISM, XKeyscore и многих других. Но об одной вещи о�
 Но мне удалось достать её...
 
 ENTER THE TORBALLDS
+
+
+# Eng Lang
+V 2013 godu Edvard Snowden peredal jurnalistam Glennu Grinvaldu i Laure Poitras jgromnoe kolichestvo secretnix documentov, kotorie raskrili detali programm slejki, takix kak 
+PRISM, XKeyscore i mnogix drugix. No ob odnoi veshi on umolchal, o **PendoCore**.
+
+**Переводить этот огромнейший текст невероятно сложно, поэтому остальное будет, когда рак на горе свистнет.**
