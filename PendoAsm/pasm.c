@@ -33,24 +33,13 @@ uint32_t output[MAX_CODE_SIZE];
 int      output_pos = 0;
 
 OpcodeInfo opcode_table[] = {
-    {"nop", 0x00, 0, {0, 0}},     {"load", 0x01, 2, {1, 2}},
-    {"loadmem", 0x02, 2, {1, 3}}, {"store", 0x03, 2, {3, 1}},
-    {"mov", 0x04, 2, {1, 1}},     {"movmem", 0x05, 2, {3, 3}},
-    {"add", 0x06, 2, {1, 1}},     {"sub", 0x07, 2, {1, 1}},
-    {"mul", 0x08, 2, {1, 1}},     {"div", 0x09, 2, {1, 1}},
-    {"pow", 0x0A, 2, {1, 1}},     {"cmp", 0x0B, 2, {1, 1}},
-    {"jmp", 0x0C, 1, {3}},        {"jz", 0x0D, 1, {3}},
-    {"jnz", 0x0E, 1, {3}},        {"js", 0x0F, 1, {3}},
-    {"jns", 0x10, 1, {3}},        {"jc", 0x11, 1, {3}},
-    {"jnc", 0x12, 1, {3}},        {"jo", 0x13, 1, {3}},
-    {"jno", 0x14, 1, {3}},        {"jp", 0x15, 1, {3}},
-    {"jnp", 0x16, 1, {3}},        {"inc", 0x17, 1, {1}},
-    {"dec", 0x18, 1, {1}},        {"call", 0x19, 1, {3}},
-    {"clz", 0x1A, 0, {0}},        {"clc", 0x1B, 0, {0}},
-    {"cls", 0x1C, 0, {0}},        {"clo", 0x1D, 0, {0}},
-    {"clp", 0x1E, 0, {0}},        {"cle", 0x1F, 0, {0}},
-    {"clb", 0x20, 0, {0}},        {"cll", 0x21, 0, {0}},
-    {"hlt", 0xFF, 0, {0}},
+    {"nop", 0x00, 0, {0, 0}},    {"load", 0x01, 2, {1, 2}}, {"loadmem", 0x02, 2, {1, 3}}, {"store", 0x03, 2, {3, 1}}, {"mov", 0x04, 2, {1, 1}},
+    {"movmem", 0x05, 2, {3, 3}}, {"add", 0x06, 2, {1, 1}},  {"sub", 0x07, 2, {1, 1}},     {"mul", 0x08, 2, {1, 1}},   {"div", 0x09, 2, {1, 1}},
+    {"pow", 0x0A, 2, {1, 1}},    {"cmp", 0x0B, 2, {1, 1}},  {"jmp", 0x0C, 1, {3}},        {"jz", 0x0D, 1, {3}},       {"jnz", 0x0E, 1, {3}},
+    {"js", 0x0F, 1, {3}},        {"jns", 0x10, 1, {3}},     {"jc", 0x11, 1, {3}},         {"jnc", 0x12, 1, {3}},      {"jo", 0x13, 1, {3}},
+    {"jno", 0x14, 1, {3}},       {"jp", 0x15, 1, {3}},      {"jnp", 0x16, 1, {3}},        {"inc", 0x17, 1, {1}},      {"dec", 0x18, 1, {1}},
+    {"call", 0x19, 1, {3}},      {"clz", 0x1A, 0, {0}},     {"clc", 0x1B, 0, {0}},        {"cls", 0x1C, 0, {0}},      {"clo", 0x1D, 0, {0}},
+    {"clp", 0x1E, 0, {0}},       {"cle", 0x1F, 0, {0}},     {"clb", 0x20, 0, {0}},        {"cll", 0x21, 0, {0}},      {"hlt", 0xFF, 0, {0}},
 };
 
 void error_exit(const char *fmt, ...) {
@@ -64,8 +53,7 @@ void error_exit(const char *fmt, ...) {
 void add_label(const char *name, uint32_t address) {
   if (label_count >= MAX_LABELS) error_exit(ERROR ": Too many labels\n");
   for (int i = 0; i < label_count; i++) {
-    if (strcasecmp(labels[i].name, name) == 0)
-      error_exit(ERROR ": Duplicate label: %s\n", name);
+    if (strcasecmp(labels[i].name, name) == 0) error_exit(ERROR ": Duplicate label: %s\n", name);
   }
 
   strncpy(labels[label_count].name, name, 31);
@@ -81,11 +69,10 @@ uint32_t find_label(const char *name) {
   return 0;
 }
 
-int label_exists(const char *name) { /* Это функция чисто, чтобы проверить на
-                                        точку входа */
-  for (int i = 0; i < label_count;
-       i++) { /* Хотя кстати, в целом, может когда-то ещё на
-                 какую-то свистоперделку проверю */
+int label_exists(const char *name) {      /* Это функция чисто, чтобы проверить на
+                                             точку входа */
+  for (int i = 0; i < label_count; i++) { /* Хотя кстати, в целом, может когда-то ещё на
+                                             какую-то свистоперделку проверю */
     if (strcasecmp(labels[i].name, name) == 0) return 1;
   }
   return 0;
@@ -172,23 +159,19 @@ void process_line_pass2(char *line, uint32_t *address) {
 
   for (int i = 0; i < op->num_operands; i++) {
     char *token = strtok(NULL, " ,\t");
-    if (!token)
-      error_exit(ERROR ": Missing operand %d for %s\n", i + 1, op->name);
+    if (!token) error_exit(ERROR ": Missing operand %d for %s\n", i + 1, op->name);
 
     uint32_t value;
     int      reg = is_register(token);
 
     switch (op->operand_types[i]) {
     case 1:
-      if (reg == -1)
-        error_exit(ERROR ": Expected register for operand %d of %s\n", i + 1,
-                   op->name);
+      if (reg == -1) error_exit(ERROR ": Expected register for operand %d of %s\n", i + 1, op->name);
       value = reg;
       break;
 
     case 2:
-      if (!parse_immediate(token, &value))
-        error_exit(ERROR ": Invalid immediate value: %s\n", token);
+      if (!parse_immediate(token, &value)) error_exit(ERROR ": Invalid immediate value: %s\n", token);
       break;
 
     case 3:
