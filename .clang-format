@@ -1,0 +1,9 @@
+IndentWidth: 2
+ColumnLimit: 150
+UseTab: Never
+AlignConsecutiveDeclarations: true
+BreakBeforeBraces: Attach
+BreakBeforeInlineASMColon: Always
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
+PointerAlignment: Right

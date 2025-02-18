@@ -1,6 +1,3 @@
-Pendochine/.clang-format
-PendoCore_32/.clang-format
-PendoAsm/.clang-format
 Pendochine/machine
 Pendochine/machine_debug
 Pendochine/machine_verbose
