@@ -5,12 +5,9 @@
 #include <string.h>
 
 void regs_dump(void) {
-  printf("PAX: %08X PBX: %08X\n", machine.regs[PAX],
-         machine.regs[PBX]);
-  printf("PCX: %08X PDX: %08X\n", machine.regs[PCX],
-         machine.regs[PDX]);
-  printf("PIP: %08X PDV: %08X\n", machine.regs[PIP],
-         machine.regs[PDV]);
+  printf("PAX: %08X PBX: %08X\n", machine.regs[PAX], machine.regs[PBX]);
+  printf("PCX: %08X PDX: %08X\n", machine.regs[PCX], machine.regs[PDX]);
+  printf("PIP: %08X PDV: %08X\n", machine.regs[PIP], machine.regs[PDV]);
   printf("FLAGS: %b\n", machine.flags);
 }
 
@@ -99,25 +96,21 @@ void mem_dump(void) {
 
   FILE *fd = fopen("mem_dump.bin", "w");
   if (fd == NULL) {
-    printf("\r[ " ANSI_ERROR "ERROR" ANSI_RESET
-           " ] Creating dump file\n");
+    printf("\r[ " ANSI_ERROR "ERROR" ANSI_RESET " ] Creating dump file\n");
     perror("\r" ANSI_INFO "fopen" ANSI_RESET "\n");
     return;
   }
 
-  printf("\r[ " ANSI_SUCCESS "OK" ANSI_RESET
-         " ] Creating dump file\n");
+  printf("\r[ " ANSI_SUCCESS "OK" ANSI_RESET " ] Creating dump file\n");
   printf("[    ] Writing dump");
   fflush(stdout);
 
   if (fwrite(machine.mem, sizeof(uint8_t), MEM_SIZE, fd) == 0) {
-    printf("\r[ " ANSI_ERROR "ERROR" ANSI_RESET
-           " ] Writing dump\n");
+    printf("\r[ " ANSI_ERROR "ERROR" ANSI_RESET " ] Writing dump\n");
     perror("\r" ANSI_INFO "fwrite" ANSI_RESET "\n");
   };
 
-  printf("\r[ " ANSI_SUCCESS "OK" ANSI_RESET
-         " ] Writing dump\n");
+  printf("\r[ " ANSI_SUCCESS "OK" ANSI_RESET " ] Writing dump\n");
 
   fclose(fd);
 }
