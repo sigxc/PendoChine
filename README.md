@@ -17,4 +17,8 @@ ENTER THE TORBALLDS
 V 2013 godu Edvard Snowden peredal jurnalistam Glennu Grinvaldu i Laure Poitras jgromnoe kolichestvo secretnix documentov, kotorie raskrili detali programm slejki, takix kak 
 PRISM, XKeyscore i mnogix drugix. No ob odnoi veshi on umolchal, o **PendoCore**.
 
+ANB SESHEA zakluchila sdelku s iasherami, i v itoge bila sozdana programma dlia electromagnitnix 5G psiterror atak na potomkov drevnix rusov.
+Zamaskirovannaia pod virtualnii processor, PendoCore podkluchaetsia napriamuu k mozgu jertvi, i s pomoshiu registra PIP (Pentagon's Instruction Pointer)
+zastavliaet cheloveka vipolniat razlichnie komandi.
+
 **Переводить этот огромнейший текст невероятно сложно, поэтому остальное будет, когда рак на горе свистнет.**
