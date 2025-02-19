@@ -4,14 +4,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-void regs_dump(void) {
+void regs_dump() {
   printf("PAX: %08X PBX: %08X\n", machine.regs[PAX], machine.regs[PBX]);
   printf("PCX: %08X PDX: %08X\n", machine.regs[PCX], machine.regs[PDX]);
   printf("PIP: %08X PDV: %08X\n", machine.regs[PIP], machine.regs[PDV]);
   printf("FLAGS: %b\n", machine.flags);
 }
 
-void print_vga(void) {
+void print_vga() {
   for (int i = 0; i < 25; i++) {
     printf("%.80s\n", &machine.mem[80 * i]);
   }
@@ -19,7 +19,7 @@ void print_vga(void) {
 }
 
 #ifndef VERBOSE
-void init(void) {
+void init() {
   for (int i = 1; i < NUM_REGS; i++) {
     machine.regs[i] = 0;
   }
@@ -28,7 +28,7 @@ void init(void) {
   memset(machine.mem, '\0', MEM_SIZE * sizeof(uint8_t));
 }
 
-void mem_dump(void) {
+void mem_dump() {
   FILE *fd = fopen("mem_dump.bin", "w");
 
   if (fd == NULL) {
@@ -43,7 +43,7 @@ void mem_dump(void) {
   fclose(fd);
 }
 
-void execute(void) {
+void execute() {
 
   // clang-format off
   void (*opcodes_lookup[])() = {
@@ -71,7 +71,7 @@ void execute(void) {
 #endif
 
 #ifdef VERBOSE
-void init(void) {
+void init() {
 
   printf("Initializing machine...\n");
   printf("\tZeroing general purpose registers\n");
@@ -90,7 +90,7 @@ void init(void) {
   memset(machine.mem, '\0', MEM_SIZE * sizeof(uint8_t));
 }
 
-void mem_dump(void) {
+void mem_dump() {
   printf("[    ] Creating dump file");
   fflush(stdout);
 
@@ -115,7 +115,7 @@ void mem_dump(void) {
   fclose(fd);
 }
 
-void execute(void) {
+void execute() {
 
   // clang-format off
   void (*opcodes_lookup[])() = {
