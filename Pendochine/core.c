@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
   mem(14) = 127;
   mem(15) = 126;
   machine.regs[PCX] = 5;
-  machine.regs[PDX] = 0;
+  machine.regs[PDX] = 2;
   mem(16) = DIV;
   mem(17) = PCX;
   mem(18) = PDX;
