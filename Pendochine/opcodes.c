@@ -16,7 +16,7 @@ void nop() {
 
 #ifdef VERBOSE
   printf(
-    "%X:\t%02x\t\t" ANSI_OPC "nop" ANSI_RESET "\n",
+    "%08X:\t%02x\t\t" ANSI_OPC "nop" ANSI_RESET "\n",
     machine.regs[PIP],
     opcode);
 #endif
@@ -29,7 +29,7 @@ void load() {
 
 #ifdef VERBOSE
   printf(
-    "%X:\t%02x %02x %02x\t" ANSI_OPC "load " ANSI_NUM "%d" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n",
+    "%08X:\t%02x %02x %02x\t" ANSI_OPC "load " ANSI_NUM "%d" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n",
     machine.regs[PIP],
     opcode,
     first_operand,
@@ -47,7 +47,7 @@ void loadmem() {
 
 #ifdef VERBOSE
   printf(
-    "%X:\t%02x %02x %02x\t" ANSI_OPC "loadmem\t" ANSI_NUM "%d" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n",
+    "%08X:\t%02x %02x %02x\t" ANSI_OPC "loadmem\t" ANSI_NUM "%d" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n",
     machine.regs[PIP],
     opcode,
     first_operand,
@@ -65,7 +65,7 @@ void store() {
 
 #ifdef VERBOSE
   printf(
-    "%X:\t%02x %02x %02x\t" ANSI_OPC "store\t" ANSI_REG "%s" ANSI_RESET ", " ANSI_NUM "%d" ANSI_RESET "\n",
+    "%08X:\t%02x %02x %02x\t" ANSI_OPC "store\t" ANSI_REG "%s" ANSI_RESET ", " ANSI_NUM "%d" ANSI_RESET "\n",
     machine.regs[PIP],
     opcode,
     first_operand,
@@ -89,7 +89,7 @@ void mov() {
 
 #ifdef VERBOSE
   printf(
-    "%X:\t%02x %02x %02x\t" ANSI_OPC "mov\t" ANSI_REG "%s" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n",
+    "%08X:\t%02x %02x %02x\t" ANSI_OPC "mov\t" ANSI_REG "%s" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n",
     machine.regs[PIP],
     opcode,
     first_operand,
@@ -107,7 +107,7 @@ void movmem() {
 
 #ifdef VERBOSE
   printf(
-    "%X:\t%02x %02x %02x\t" ANSI_OPC "movmem\t" ANSI_NUM "%d" ANSI_RESET ", " ANSI_NUM "%d" ANSI_RESET "\n",
+    "%08X:\t%02x %02x %02x\t" ANSI_OPC "movmem\t" ANSI_NUM "%d" ANSI_RESET ", " ANSI_NUM "%d" ANSI_RESET "\n",
     machine.regs[PIP],
     opcode,
     first_operand,
@@ -130,7 +130,7 @@ void add() {
 
 #ifdef VERBOSE
   printf(
-    "%X:\t%02x %02x %02x\t" ANSI_OPC "add\t" ANSI_REG "%s" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n", machine.regs[PIP],
+    "%08X:\t%02x %02x %02x\t" ANSI_OPC "add\t" ANSI_REG "%s" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n", machine.regs[PIP],
     opcode,
     first_operand,
     second_operand,
@@ -162,7 +162,7 @@ void sub() {
 
 #ifdef VERBOSE
   printf(
-    "%X:\t%02x %02x %02x\t" ANSI_OPC "sub\t" ANSI_REG "%s" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n",
+    "%08X:\t%02x %02x %02x\t" ANSI_OPC "sub\t" ANSI_REG "%s" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n",
     machine.regs[PIP],
     opcode,
     first_operand,
@@ -195,7 +195,7 @@ void mul() {
 
 #ifdef VERBOSE
   printf(
-    "%X:\t%02x %02x %02x\t" ANSI_OPC "mul\t" ANSI_REG "%s" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n",
+    "%08X:\t%02x %02x %02x\t" ANSI_OPC "mul\t" ANSI_REG "%s" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n",
     machine.regs[PIP],
     opcode,
     first_operand,
@@ -228,7 +228,7 @@ void divide() {
 
 #ifdef VERBOSE
   printf(
-    "%X:\t%02x %02x %02x\t" ANSI_OPC "div\t" ANSI_REG "%s" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n",
+    "%08X:\t%02x %02x %02x\t" ANSI_OPC "div\t" ANSI_REG "%s" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n",
     machine.regs[PIP],
     opcode,
     first_operand,
@@ -258,7 +258,7 @@ void power() {
 
 #ifdef VERBOSE
   printf(
-    "%X:\t%02x %02x %02x\t" ANSI_OPC "pow\t" ANSI_REG "%s" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n",
+    "%08X:\t%02x %02x %02x\t" ANSI_OPC "pow\t" ANSI_REG "%s" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n",
     machine.regs[PIP],
     opcode,
     first_operand,
