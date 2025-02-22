@@ -1,5 +1,5 @@
-Pendochine/machine
-Pendochine/machine_debug
-Pendochine/machine_verbose
-Pendochine/mem_dump.bin
-Pendochine/mem_dump.hex
+PendoCore/machine
+PendoCore/machine_debug
+PendoCore/machine_verbose
+PendoCore/mem_dump.bin
+PendoCore/mem_dump.hex

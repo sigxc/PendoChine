@@ -3,13 +3,13 @@ BIN = machine
 FLAGS = -O3 -march=native -mtune=native
 
 all:
-	$(CC) $(FLAGS) core.c machine.c opcodes.c -o $(BIN)
+	$(CC) $(FLAGS) main.c core.c opcodes.c -o $(BIN)
 
 debug:
-	$(CC) -g core.c machine.c opcodes.c -o $(BIN)_debug
+	$(CC) -g main.c core.c opcodes.c -o $(BIN)_debug
 
 verbose:
-	$(CC) $(FLAGS) -DVERBOSE core.c machine.c opcodes.c -o $(BIN)_verbose
+	$(CC) $(FLAGS) -DVERBOSE main.c core.c opcodes.c -o $(BIN)_verbose
 
 run: all
 	./$(BIN)

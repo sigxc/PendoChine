@@ -1,4 +1,4 @@
-#include "machine.h"
+#include "core.h"
 #include <stdio.h>
 
 #ifdef VERBOSE

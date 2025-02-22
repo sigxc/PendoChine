@@ -1,4 +1,4 @@
-#include "machine.h"
+#include "core.h"
 
 Machine machine; // Needed to avoid multiple declarations
 

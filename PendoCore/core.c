@@ -1,4 +1,4 @@
-#include "machine.h"
+#include "core.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
