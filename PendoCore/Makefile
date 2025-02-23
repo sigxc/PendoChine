@@ -15,8 +15,5 @@ run: all
 	./$(BIN)
 
 clean:
-	rm $(BIN)
-	rm mem_dump.hex
-	rm $(BIN)_debug
-	rm $(BIN)_verbose
-	rm mem_dump.bin
+	rm $(BIN)*
+	rm mem_dump*
