@@ -119,6 +119,6 @@ void cle(void);
 void clb(void);
 void cll(void);
 
-void print_vga(void);
+void pvb(void);
 
 #endif

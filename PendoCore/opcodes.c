@@ -22,7 +22,6 @@ void nop() {
 #endif
 
   machine.regs[PIP]++;
-  return;
 }
 
 void load() {
@@ -40,7 +39,6 @@ void load() {
 
   machine.regs[second_operand] = first_operand;
   machine.regs[PIP] += 3;
-  return;
 }
 
 void loadmem() {
@@ -58,7 +56,6 @@ void loadmem() {
 
   machine.regs[second_operand] = machine.mem[first_operand];
   machine.regs[PIP] += 3;
-  return;
 }
 
 void store() {
@@ -76,13 +73,6 @@ void store() {
 
   machine.mem[second_operand] = machine.regs[first_operand];
   machine.regs[PIP] += 3;
-
-  /*
-    if (machine.mem[second_operand] <= VGA_BUFFER_SIZE) {
-      print_vga();
-    }
-  */
-  return;
 }
 
 void mov() {
@@ -100,7 +90,6 @@ void mov() {
 
   machine.regs[second_operand] = machine.regs[first_operand];
   machine.regs[PIP] += 3;
-  return;
 }
 
 void movmem() {
@@ -118,12 +107,6 @@ void movmem() {
 
   machine.mem[second_operand] = machine.mem[first_operand];
   machine.regs[PIP] += 3;
-  /*
-  if (machine.mem[second_operand] <= VGA_BUFFER_SIZE) {
-      print_vga();
-    }
-  */
-  return;
 }
 
 void add() {
@@ -155,7 +138,6 @@ void add() {
   machine.regs[first_operand] = result;
 
   machine.regs[PIP] += 3;
-  return;
 }
 
 void sub() {
@@ -188,7 +170,6 @@ void sub() {
   machine.regs[first_operand] = result;
 
   machine.regs[PIP] += 3;
-  return;
 }
 
 void mul() {
@@ -221,7 +202,6 @@ void mul() {
   machine.regs[first_operand] = result;
 
   machine.regs[PIP] += 3;
-  return;
 }
 
 void divide() {
@@ -251,7 +231,6 @@ void divide() {
 
   SET_ARBITRARY_BIT(machine.flags, machine.regs[PDV] != 0, REMAINDER_FLAG_POS);
   machine.regs[PIP] += 3;
-  return;
 }
 
 void power() {
@@ -279,5 +258,11 @@ void power() {
   }
 
   machine.regs[PIP] += 3;
-  return;
+}
+
+void pvb() {
+  for (int i = 0; i < 25; i++) {
+    printf("%.80s\n", &machine.mem[80 * i]);
+  }
+  printf("\x1b[25A\r");
 }

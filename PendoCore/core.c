@@ -11,13 +11,6 @@ void regs_dump() {
   printf("FLAGS: %b\n", machine.flags);
 }
 
-void print_vga() {
-  for (int i = 0; i < 25; i++) {
-    printf("%.80s\n", &machine.mem[80 * i]);
-  }
-  printf("\x1b[25A\r");
-}
-
 #ifndef VERBOSE
 void init() {
   for (int i = 1; i < NUM_REGS; i++) {
@@ -55,7 +48,7 @@ void execute() {
     setc, sets, seto,
     setp, sete, setb, setl,
     clz, clc, cls, clo, clp, cle,
-    clb, cll*/
+    clb, cll, pvb*/
   };
   // clang-format on
 
@@ -127,7 +120,7 @@ void execute() {
     setc, sets, seto,
     setp, sete, setb, setl,
     clz, clc, cls, clo, clp, cle,
-    clb, cll*/
+    clb, cll, pvb*/
   };
   // clang-format on
   printf("Executing...\n");
