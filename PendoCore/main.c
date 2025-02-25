@@ -1,7 +1,5 @@
 #include "core.h"
 
-Machine machine; // Needed to avoid multiple declarations
-
 int main(int argc, char *argv[]) {
   init();
   machine.regs[PAX] = 2;
