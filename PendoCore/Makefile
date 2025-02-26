@@ -1,15 +1,16 @@
 CC = clang
-BIN = machine
-FLAGS = -O3 -march=native -mtune=native
+BIN = core
+FLAGS = -O3 -march=native -mtune=native -lraylib -lm -lpthread -ldl -lrt -lX11
+FILES = main.c core.c opcodes.c machine.c
 
 all:
-	$(CC) $(FLAGS) main.c core.c opcodes.c -o $(BIN)
+	$(CC) $(FLAGS) $(FILES) -o $(BIN)
 
 debug:
-	$(CC) -g main.c core.c opcodes.c -o $(BIN)_debug
+	$(CC) -g $(FILES) -o $(BIN)_debug
 
 verbose:
-	$(CC) $(FLAGS) -DVERBOSE main.c core.c opcodes.c -o $(BIN)_verbose
+	$(CC) $(FLAGS) -DVERBOSE $(FILES) -o $(BIN)_verbose
 
 run: all
 	./$(BIN)
