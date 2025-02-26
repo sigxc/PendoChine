@@ -1,5 +1,5 @@
 CC = clang
-BIN = core
+BIN = pcore
 FLAGS = -O3 -march=native -mtune=native -lraylib -lm -lpthread -ldl -lrt -lX11
 FILES = main.c core.c opcodes.c machine.c
 
