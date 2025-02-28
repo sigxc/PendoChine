@@ -5,6 +5,7 @@
 
 #define MEM_SIZE 65536
 #define NUM_REGS 6
+#define VGA_BUFFER_SIZE (80 * 25 * sizeof(uint8_t))
 
 typedef struct {
   int8_t   mem[MEM_SIZE];
@@ -12,10 +13,14 @@ typedef struct {
   uint32_t flags : 8;
 } Machine;
 
-#define VGA_BUFFER_SIZE (80 * 25 * sizeof(uint8_t))
+typedef enum {
+  DEFAULT,
+  VERBOSE,
+} Loglevel;
 
 // Needed to avoid multiple declarations
 extern Machine machine;
+extern Loglevel loglevel;
 
 #define BIT(x) (1 << x)
 #define SET_FLAG(bitfield, flag) (bitfield |= flag)
@@ -79,46 +84,47 @@ enum {
   PCX, PDX,
 };
 
-void init(void);
-void regs_dump(void);
-void mem_dump(void);
-void execute(void);
+void init();
+void regs_dump();
+void mem_dump();
+void execute();
 
-void nop(void);
-void load(void);
-void loadmem(void);
-void store(void);
-void mov(void);
-void movmem(void);
-void add(void);
-void sub(void);
-void mul(void);
-void divide(void);
-void power(void);
-void cmp(void);
-void jmp(void);
-void jz(void);
-void jnz(void);
-void js(void);
-void jns(void);
-void jc(void);
-void jnc(void);
-void jo(void);
-void jno(void);
-void jp(void);
-void jnp(void);
-void inc(void);
-void dec(void);
-void call(void);
-void clz(void);
-void clc(void);
-void cls(void);
-void clo(void);
-void clp(void);
-void cle(void);
-void clb(void);
-void cll(void);
+void nop();
+void load();
+void loadmem();
+void store();
+void mov();
+void movmem();
+void add();
+void sub();
+void mul();
+void divide();
+void power();
+void cmp();
+void jmp();
+void jz();
+void jnz();
+void js();
+void jns();
+void jc();
+void jnc();
+void jo();
+void jno();
+void jp();
+void jnp();
+void inc();
+void dec();
+void call();
+void clz();
+void clc();
+void cls();
+void clo();
+void clp();
+void cle();
+void clb();
+void cll();
 
-void pvb(void);
+void pvb();
+void printlog(const char *str);
 
 #endif
