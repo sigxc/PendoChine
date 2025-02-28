@@ -26,7 +26,7 @@ void load() {
 
   if (loglevel == VERBOSE) {
   printf(
-    "%08X:\t%02x %02x %02x\t" ANSI_OPC "load " ANSI_NUM "%d" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n",
+    "%08X:\t%02x %02x %02x\t" ANSI_OPC "load\t" ANSI_NUM "%d" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n",
     machine.regs[PIP],
     opcode,
     first_operand,
