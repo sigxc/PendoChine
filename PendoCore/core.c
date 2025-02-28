@@ -63,7 +63,6 @@ void mem_dump() {
 
 void execute() {
 
-  // clang-format off
   void (*opcodes_lookup[])() = {
     nop, load, loadmem, store, mov,
     movmem, add, sub, mul, divide,
@@ -75,7 +74,7 @@ void execute() {
     clz, clc, cls, clo, clp, cle,
     clb, cll, pvb*/
   };
-  // clang-format on
+
   printlog("Executing...\n");
   while (1) {
     if (machine.mem[machine.regs[PIP]] == HALT) {
