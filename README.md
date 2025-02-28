@@ -23,5 +23,3 @@ zastavliaet cheloveka vipolnyat razlichnye komandi. Yesli objekt ataki chipirova
 Obychno eto vyrazhaetsa razlichnimy problemami v zhizni zhertvy, kak materailnimi tak i duhovnimi.
 Snowden poschital etu programmu slishkom opasnoj i poetomu ne stal raskryvat yeyo obshestvu.
 No mne udalos dostat yeyo...
-
-**Переводить этот огромнейший текст невероятно сложно, поэтому остальное будет, когда рак на горе свистнет.**
