@@ -1,4 +1,4 @@
-CC = clang
+CC = gcc
 BIN = pcore
 FLAGS = -O3 -march=native -mtune=native
 FILES = main.c core.c opcodes.c machine.c
