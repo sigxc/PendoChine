@@ -1,6 +1,23 @@
+#include <stdio.h>
+#include <unistd.h>
 #include "core.h"
 
 int main(int argc, char *argv[]) {
+  int arg = 0;
+
+  while ((arg = getopt(argc, argv, "v")) != -1) {
+    switch(arg) {
+      case 'v': {
+        loglevel = VERBOSE;
+        break;
+      }
+      default: {
+        puts("Unknown argument!");
+        break;
+      }
+    }
+  }
+
   init();
   machine.regs[PAX] = 2;
   mem(0) = STORE;

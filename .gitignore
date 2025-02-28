@@ -1,5 +1,4 @@
-PendoCore/machine
-PendoCore/machine_debug
-PendoCore/machine_verbose
+PendoCore/pcore
+PendoCore/pcore_debug
 PendoCore/mem_dump.bin
 PendoCore/mem_dump.hex
