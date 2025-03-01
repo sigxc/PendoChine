@@ -10,6 +10,7 @@ start:
 ```
 
 ## Инструкции:
+```
  - nop     : _
  - load    : reg, imm
  - loadmem : reg, mem
@@ -35,7 +36,7 @@ start:
    clb, cll      /
    
  - hlt       : _
-
+```
 ## Структуры:
 
  - Метка:
