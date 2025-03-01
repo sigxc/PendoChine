@@ -11,7 +11,6 @@
 #define MAX_LINE_LEN 256
 #define REGS_NUMBER 4
 
-// GREEN - 32
 #define ERROR "\x1b[31mERROR\x1b[0m"
 
 typedef struct {
@@ -29,16 +28,14 @@ typedef struct {
 Label labels[MAX_LABELS];
 int label_count = 0;
 
-uint32_t output[MAX_CODE_SIZE];
+uint8_t output[MAX_CODE_SIZE];
 int output_pos = 0;
 
 OpcodeInfo opcode_table[] = {
   {"nop", 0x00, 0, {0, 0}},
-  {"load", 0x01, 2, {1, 2}},
-  {"loadmem", 0x02, 2, {1, 3}},
-  {"store", 0x03, 2, {3, 1}},
-  {"mov", 0x04, 2, {1, 1}},
-  {"movmem", 0x05, 2, {3, 3}},
+  {"mov", 0x01, 2, {1, 3}},
+  {"mov", 0x02, 2, {1, 3}},
+  {"mov", 0x03, 2, {3, 1}},
   {"add", 0x06, 2, {1, 1}},
   {"sub", 0x07, 2, {1, 1}},
   {"mul", 0x08, 2, {1, 1}},
@@ -67,7 +64,7 @@ OpcodeInfo opcode_table[] = {
   {"cle", 0x1F, 0, {0}},
   {"clb", 0x20, 0, {0}},
   {"cll", 0x21, 0, {0}},
-  {"hlt", -1, 0, {0}},
+  {"hlt", 0xFF, 0, {0}},
 };
 
 void error_exit(const char *fmt, ...) {
@@ -120,52 +117,25 @@ int parse_immediate(const char *token, uint32_t *value) {
   return *endptr == '\0';
 }
 
-int process_escapes(const char *src, int src_len, int *processed_len) {
-  int len = 0;
-  for (int i = 0; i < src_len; ) {
-    if (src[i] == '\\') {
-      if (i + 1 >= src_len) return -1;
-      i += 2;
-      len++;
-    } else {
-      i++;
-      len++;
-    }
+void write_number(uint32_t value) {
+  if (value < 256) {
+    output[output_pos++] = (uint8_t)value;
+  } else if (value < 65536) {
+    output[output_pos++] = (uint8_t)(value & 0xFF);
+    output[output_pos++] = (uint8_t)((value >> 8) & 0xFF);
+  } else {
+    output[output_pos++] = (uint8_t)(value & 0xFF);
+    output[output_pos++] = (uint8_t)((value >> 8) & 0xFF);
+    output[output_pos++] = (uint8_t)((value >> 16) & 0xFF);
+    output[output_pos++] = (uint8_t)((value >> 24) & 0xFF);
   }
-  *processed_len = len;
-  return 0;
-}
-
-int process_string(const char *src, int src_len, uint32_t *dest, int *dest_len) {
-  int j = 0;
-  for (int i = 0; i < src_len; ) {
-    if (src[i] == '\\') {
-      if (i + 1 >= src_len) return -1;
-      char escape = src[i + 1];
-      switch (escape) {
-      case 'n': dest[j++] = '\n'; break;
-      case 't': dest[j++] = '\t'; break;
-      case 'r': dest[j++] = '\r'; break;
-      case '0': dest[j++] = '\0'; break;
-      case '"': dest[j++] = '"'; break;
-      case '\\': dest[j++] = '\\'; break;
-      default: return -1;
-      }
-      i += 2;
-    } else {
-      dest[j++] = (unsigned char)src[i];
-      i++;
-    }
-  }
-  *dest_len = j;
-  return 0;
 }
 
 void process_line_pass1(char *line, uint32_t *address) {
   char *comment = strchr(line, ';');
   if (comment) *comment = '\0';
 
-  char  *trimmed = line + strspn(line, " \t");
+  char *trimmed = line + strspn(line, " \t");
   size_t len = strlen(trimmed);
   while (len > 0 && isspace(trimmed[len - 1])) trimmed[--len] = '\0';
   if (!*trimmed) return;
@@ -187,21 +157,17 @@ void process_line_pass1(char *line, uint32_t *address) {
   if (strncasecmp(p, ".string", 7) == 0 && (p[7] == '\0' || isspace(p[7]))) {
     p += 7;
     while (*p && isspace(*p)) p++;
-    if (*p != '"') {
-      error_exit(ERROR ": Expected string after .string directive\n");
-    }
+    if (*p != '"') error_exit(ERROR ": Expected string after .string directive\n");
     p++;
+    
     char *start = p;
     while (*p && *p != '"') p++;
-    if (*p != '"') {
-      error_exit(ERROR ": Unterminated string in .string directive\n");
-    }
+    if (*p != '"') error_exit(ERROR ": Unterminated string in .string directive\n");
+    
     int src_len = p - start;
     p++;
     while (*p && isspace(*p)) p++;
-    if (*p != '\0' && *p != ';') {
-      error_exit(ERROR ": Extra characters after .string directive\n");
-    }
+    if (*p != '\0' && *p != ';') error_exit(ERROR ": Extra characters after .string directive\n");
 
     *address += src_len + 1;
     return;
@@ -224,7 +190,7 @@ void process_line_pass2(char *line, uint32_t *address) {
   char *comment = strchr(line, ';');
   if (comment) *comment = '\0';
 
-  char  *trimmed = line + strspn(line, " \t");
+  char *trimmed = line + strspn(line, " \t");
   size_t len = strlen(trimmed);
   while (len > 0 && isspace(trimmed[len - 1])) trimmed[--len] = '\0';
   if (!*trimmed) return;
@@ -237,24 +203,20 @@ void process_line_pass2(char *line, uint32_t *address) {
   if (strncasecmp(p, ".string", 7) == 0 && (p[7] == '\0' || isspace(p[7]))) {
     p += 7;
     while (*p && isspace(*p)) p++;
-    if (*p != '"') {
-      error_exit(ERROR ": Expected string after .string directive\n");
-    }
+    if (*p != '"') error_exit(ERROR ": Expected string after .string directive\n");
     p++;
+    
     char *start = p;
     while (*p && *p != '"') p++;
-    if (*p != '"') {
-      error_exit(ERROR ": Unterminated string in .string directive\n");
-    }
+    if (*p != '"') error_exit(ERROR ": Unterminated string in .string directive\n");
+    
     int src_len = p - start;
     p++;
     while (*p && isspace(*p)) p++;
-    if (*p != '\0' && *p != ';') {
-      error_exit(ERROR ": Extra characters after .string directive\n");
-    }
+    if (*p != '\0' && *p != ';') error_exit(ERROR ": Extra characters after .string directive\n");
 
     for (int i = 0; i < src_len; i++) {
-      output[output_pos++] = (uint32_t)(unsigned char)start[i];
+      output[output_pos++] = (uint8_t)start[i];
       (*address)++;
     }
     output[output_pos++] = 0;
@@ -274,7 +236,51 @@ void process_line_pass2(char *line, uint32_t *address) {
   }
   if (!op) error_exit(ERROR ": Unknown instruction: %s\n", mnemonic);
 
-  output[output_pos++] = op->opcode;
+  if (strcasecmp(mnemonic, "mov") == 0) {
+    char *op1 = strtok(NULL, " ,\t");
+    char *op2 = strtok(NULL, " ,\t");
+    if (!op1 || !op2) error_exit(ERROR ": Missing operands for mov\n");
+
+    int is_mem_op1 = (op1[0] == '[');
+    int is_mem_op2 = (op2[0] == '[');
+
+    if (is_mem_op1) {
+      op1[strlen(op1) - 1] = '\0';
+      op1++;
+    }
+    if (is_mem_op2) {
+      op2[strlen(op2) - 1] = '\0';
+      op2++;
+    }
+
+    if (!is_mem_op1 && !is_mem_op2) op = &opcode_table[1];
+    else if (!is_mem_op1 && is_mem_op2) op = &opcode_table[2];
+    else if (is_mem_op1 && !is_mem_op2) op = &opcode_table[3];
+    else error_exit(ERROR ": Invalid mov operands\n");
+
+    write_number(op->opcode);
+    (*address)++;
+
+    uint32_t value1;
+    int reg1 = is_register(op1);
+    if (reg1 != -1) value1 = reg1;
+    else if (parse_immediate(op1, &value1)) {}
+    else value1 = find_label(op1);
+    write_number(value1);
+    (*address)++;
+
+    uint32_t value2;
+    int reg2 = is_register(op2);
+    if (reg2 != -1) value2 = reg2;
+    else if (parse_immediate(op2, &value2)) {}
+    else value2 = find_label(op2);
+    write_number(value2);
+    (*address)++;
+
+    return;
+  }
+
+  write_number(op->opcode);
   (*address)++;
 
   for (int i = 0; i < op->num_operands; i++) {
@@ -308,13 +314,13 @@ void process_line_pass2(char *line, uint32_t *address) {
       error_exit(ERROR ": Invalid operand type\n");
     }
 
-    output[output_pos++] = value;
+    write_number(value);
     (*address)++;
   }
 }
 
 int main(int argc, char *argv[]) {
-  time_t     rawtime;
+  time_t rawtime;
   struct tm *timeinfo;
   time(&rawtime);
   timeinfo = localtime(&rawtime);
@@ -341,9 +347,10 @@ int main(int argc, char *argv[]) {
 
   FILE *out = fopen(argv[2], "wb");
   if (!out) error_exit(ERROR ": Could not open output file\n");
-  fwrite(output, sizeof(uint32_t), output_pos, out);
+  fwrite(output, sizeof(uint8_t), output_pos, out);
   fclose(out);
 
   printf("Compilation \x1b[32mfinished\x1b[0m at %s", asctime(timeinfo));
+  printf("Output size: %d bytes\n", output_pos);
   return 0;
 }
