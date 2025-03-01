@@ -3,6 +3,7 @@
 #include "core.h"
 
 int main(int argc, char *argv[]) {
+  loglevel = DEFAULT;
   int arg = 0;
 
   while ((arg = getopt(argc, argv, "v")) != -1) {
