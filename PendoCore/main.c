@@ -48,7 +48,10 @@ int main(int argc, char *argv[]) {
   mem(22) = POW;
   mem(23) = PCX;
   mem(24) = PDX;
-  mem(25) = HALT;
+  mem(25) = CMP;
+  mem(26) = PCX;
+  mem(27) = PDX;
+  mem(28) = HALT;
 
   execute();
   regs_dump();

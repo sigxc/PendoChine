@@ -258,6 +258,37 @@ void power() {
   machine.regs[PIP] += 3;
 }
 
+void cmp() {
+
+  if (loglevel == VERBOSE) {
+    printf(
+      "%08X:\t%02x %02x %02x\t" ANSI_OPC "cmp\t" ANSI_REG "%s" ANSI_RESET ", " ANSI_REG "%s" ANSI_RESET "\n",
+      machine.regs[PIP],
+      opcode,
+      first_operand,
+      second_operand,
+      regs_name_lookup[first_operand],
+      regs_name_lookup[second_operand]);
+  }
+
+  SET_ARBITRARY_BIT(
+    machine.flags,
+    machine.regs[first_operand] == machine.regs[second_operand],
+    EQUAL_FLAG_POS);
+
+  SET_ARBITRARY_BIT(
+    machine.flags,
+    machine.regs[first_operand] > machine.regs[second_operand],
+    BIGGER_FLAG_POS);
+
+  SET_ARBITRARY_BIT(
+    machine.flags,
+    machine.regs[first_operand] < machine.regs[second_operand],
+    SMALLER_FLAG_POS);
+
+  machine.regs[PIP] += 3;
+}
+
 void pvb() {
   for (int i = 0; i < 25; i++) {
     printf("%.80s\n", &machine.mem[80 * i]);

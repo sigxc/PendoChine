@@ -13,12 +13,14 @@ typedef struct {
   uint32_t flags : 8;
 } Machine;
 
+typedef enum {
+  DEFAULT,
+  VERBOSE
+} Loglevel;
+
 // Needed to avoid multiple declarations
 extern Machine machine;
-extern int loglevel;
-
-#define DEFAULT 0
-#define VERBOSE 1
+extern Loglevel loglevel;
 
 #define BIT(x) (1 << x)
 #define SET_FLAG(bitfield, flag) (bitfield |= flag)
