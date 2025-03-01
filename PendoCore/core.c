@@ -8,7 +8,7 @@ void regs_dump() {
   printf("PAX: %08X PBX: %08X\n", machine.regs[PAX], machine.regs[PBX]);
   printf("PCX: %08X PDX: %08X\n", machine.regs[PCX], machine.regs[PDX]);
   printf("PIP: %08X PDV: %08X\n", machine.regs[PIP], machine.regs[PDV]);
-  printf("FLAGS: %b\n", machine.flags);
+  printf("FLAGS: %08b\n", machine.flags);
 }
 
 void printlog(const char *str) {
@@ -66,7 +66,7 @@ void execute() {
   void (*opcodes_lookup[])() = {
     nop, load, loadmem, store, mov,
     movmem, add, sub, mul, divide,
-    power, /*cmp, jmp, jz, jnz,
+    power, cmp, /*jmp, jz, jnz,
     js, jns, jo, jno, jp,
     jnp, inc, dec, call, setz,
     setc, sets, seto,
