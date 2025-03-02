@@ -4,17 +4,26 @@
 #include <stdlib.h>
 #include <string.h>
 
+void printlog(const char *str) {
+  if (loglevel == VERBOSE) {
+    fputs(str, stdout);
+  }
+}
+
+void read_binary(const char *filename) {
+  FILE *stream = fopen(filename, "rb");
+  if (stream == NULL) {
+    perror("Failed to read binary");
+    exit(1);
+  }
+  fread(&machine.mem[VGA_BUFFER_SIZE], sizeof(int32_t), MEM_SIZE, stream);
+}
+
 void regs_dump() {
   printf("PAX: %08X PBX: %08X\n", machine.regs[PAX], machine.regs[PBX]);
   printf("PCX: %08X PDX: %08X\n", machine.regs[PCX], machine.regs[PDX]);
   printf("PIP: %08X PDV: %08X\n", machine.regs[PIP], machine.regs[PDV]);
   printf("FLAGS: %08b\n", machine.flags);
-}
-
-void printlog(const char *str) {
-  if (loglevel == VERBOSE) {
-    fputs(str, stdout);
-  }
 }
 
 void init() {

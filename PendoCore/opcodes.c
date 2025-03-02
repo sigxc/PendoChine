@@ -290,8 +290,17 @@ void cmp() {
 }
 
 void pvb() {
+
+  if (loglevel == VERBOSE) {
+  printf(
+    "%08X:\t%02x\t\t" ANSI_OPC "pvb" ANSI_RESET "\n",
+    machine.regs[PIP],
+    opcode);
+  }
+
   for (int i = 0; i < 25; i++) {
     printf("%.80s\n", &machine.mem[80 * i]);
   }
   printf("\x1b[25A\r");
+  machine.regs[PIP]++;
 }

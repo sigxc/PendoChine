@@ -8,7 +8,7 @@
 #define VGA_BUFFER_SIZE (80 * 25 * sizeof(uint8_t))
 
 typedef struct {
-  int8_t   mem[MEM_SIZE];
+  int32_t   mem[MEM_SIZE];
   int32_t  regs[NUM_REGS];
   uint32_t flags : 8;
 } Machine;
@@ -86,6 +86,7 @@ enum {
 
 void init();
 void regs_dump();
+void read_binary(const char *filename);
 void mem_dump();
 void execute();
 
@@ -123,8 +124,6 @@ void clp();
 void cle();
 void clb();
 void cll();
-
 void pvb();
-void printlog(const char *str);
 
 #endif
