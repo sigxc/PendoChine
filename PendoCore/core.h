@@ -79,9 +79,9 @@ enum {
 };
 
 enum {
-  PIP, PDV,
   PAX, PBX,
   PCX, PDX,
+  PIP, PDV,
 };
 
 void init();

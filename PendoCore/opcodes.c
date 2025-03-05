@@ -2,12 +2,12 @@
 #include <stdio.h>
 
 char *regs_name_lookup[] = {
-  [PIP] = "pip",
-  [PDV] = "pdv",
   [PAX] = "pax",
   [PBX] = "pbx",
   [PCX] = "pcx",
   [PDX] = "pdx",
+  [PIP] = "pip",
+  [PDV] = "pdv",
 };
 
 void nop() {
